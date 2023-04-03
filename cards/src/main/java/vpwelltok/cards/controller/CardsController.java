@@ -5,6 +5,8 @@ import java.util.List;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import vpwelltok.cards.config.CardsServiceConfig;
@@ -18,6 +20,8 @@ import vpwelltok.cards.repository.CardsRepository;
 @RestController
 public class CardsController {
 
+    private static final Logger logger = LoggerFactory.getLogger(CardsController.class);
+
     @Autowired
     private CardsRepository cardsRepository;
 
@@ -26,7 +30,9 @@ public class CardsController {
 
     @PostMapping("/myCards")
     public List<Cards> getCardDetails(@RequestHeader("vpwelltok-correlation-id") String correlationid, @RequestBody Customer customer) {
+        logger.info("getCardDetails() method started");
         List<Cards> cards = cardsRepository.findByCustomerId(customer.getCustomerId());
+        logger.info("getCardDetails() method ended");
         if (cards != null) {
             return cards;
         } else {
